@@ -28,7 +28,7 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
  <title>Dra. Jeanne Menezes | Farmacêutica Esteta em Icaraí</title>
  <meta name="description" content="Dra. Jeanne Menezes, farmacêutica esteta em Icaraí, Niterói. Toxina botulínica, bioestimulador de colágeno e preenchimento com ácido hialurônico. Agende sua avaliação." />
- <meta name="theme-color" content="#49372d" />
+ <meta name="theme-color" content="#603820" />
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  <meta property="og:title" content="Dra. Jeanne Menezes · Estética com identidade" />
  <meta property="og:description" content="Se reconhecer no espelho te coloca em outra posição. Conheça os cuidados e agende sua avaliação em Icaraí, Niterói." />
@@ -72,7 +72,7 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
    <p class="gallery-note">Cada pessoa tem características próprias. Os resultados variam e dependem de avaliação individual.</p>
   </div>
  </div></div></section>
- <section id="sobre" class="about-section"><div class="container about-grid"><div class="about-image"><img src="/images/jeanne.jpg" alt="Jeanne Menezes, farmacêutica esteta" width="933" height="1400" loading="lazy" /><span class="image-label">PRAZER, JEANNE.</span></div><div class="about-copy"><p class="eyebrow">QUEM VAI CUIDAR DE VOCÊ</p><h2>Dra. Jeanne<br /><em>Menezes</em></h2><p class="about-role">Farmacêutica Esteta</p><p>Sou Jeanne Menezes, farmacêutica esteta, e acredito que o cuidado com a beleza começa na forma como você se vê. Meu convite é para que esse momento seja também um encontro com a sua identidade, respeitando aquilo que faz você ser única.</p><p>Meu trabalho reúne toxina botulínica, bioestimulador de colágeno e preenchimento com ácido hialurônico. A escolha de um procedimento começa por compreender suas expectativas e avaliar o que faz sentido para você.</p><p>Para mim, cuidar também é abrir espaço para a conversa: entender o que você deseja, esclarecer dúvidas e falar sobre possibilidades e limites. Você não precisa chegar com um procedimento escolhido — pode começar contando como se sente.</p><p>Recebo você em Icaraí, Niterói, de segunda a sexta-feira, com hora marcada. Vamos conversar sobre o seu próximo cuidado?</p><a class="text-link" href="https://www.instagram.com/drajeannemenezes/" target="_blank" rel="noopener noreferrer">Conheça meu Instagram <span aria-hidden="true">↗</span></a></div></div></section>
+ <section id="sobre" class="about-section"><div class="container about-grid"><div class="about-image"><img src="/images/jeanne.jpg" alt="Jeanne Menezes, farmacêutica esteta" width="933" height="1400" loading="lazy" /><span class="image-label">PRAZER, JEANNE.</span></div><div class="about-copy"><p class="eyebrow">QUEM VAI CUIDAR DE VOCÊ</p><h2>Dra. Jeanne<br /><em>Menezes</em></h2><p class="about-role">Farmacêutica Esteta</p><p>Sou Jeanne Menezes, farmacêutica esteta, e acredito que o cuidado com a beleza começa na forma como você se vê. Meu convite é para que esse momento seja também um encontro com a sua identidade, respeitando aquilo que faz você ser única.</p><p>Meu trabalho reúne toxina botulínica, bioestimulador de colágeno e preenchimento com ácido hialurônico. A escolha de um procedimento começa por compreender suas expectativas e avaliar o que faz sentido para você.</p><p>Para mim, cuidar também é abrir espaço para a conversa: entender o que você deseja, esclarecer dúvidas e falar sobre possibilidades e limites. Você não precisa chegar com um procedimento escolhido. Pode começar contando como se sente.</p><p>Recebo você em Icaraí, Niterói, de segunda a sexta-feira, com hora marcada. Vamos conversar sobre o seu próximo cuidado?</p><a class="text-link" href="https://www.instagram.com/drajeannemenezes/" target="_blank" rel="noopener noreferrer">Conheça meu Instagram <span aria-hidden="true">↗</span></a></div></div></section>
  <section class="section container steps-section"><div><p class="eyebrow">SEU PRIMEIRO PASSO</p><h2>O cuidado começa<br /><em>com uma conversa.</em></h2></div><ol class="steps"><li><span>01</span><div><h3>Vamos conversar</h3><p>Entre em contato pelo WhatsApp e conte o que você procura.</p></div></li><li><span>02</span><div><h3>Reserve seu horário</h3><p>Consulte a disponibilidade de segunda a sexta-feira.</p></div></li><li><span>03</span><div><h3>Venha para sua avaliação</h3><p>Converse sobre suas expectativas e tire suas dúvidas pessoalmente.</p></div></li></ol></section>
 
  <section id="consultorio" class="space-section" aria-labelledby="space-title"><div class="container">
@@ -104,14 +104,12 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  const galleryImages = slides.map(slide => slide.querySelector('img'));
  const toggle = carousel.querySelector('.carousel-toggle');
  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
- const mobileMotion = window.matchMedia('(max-width: 767px), (hover: none) and (pointer: coarse)');
  let current = 0;
  let paused = reducedMotion.matches;
  let hovering = false;
  let focused = false;
  let timer;
  let slideRequest = 0;
- let fadeTimer;
  async function renderSlide(next) {
   const target = (next + slides.length) % slides.length;
   const request = ++slideRequest;
@@ -119,9 +117,6 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   photo.loading = 'eager';
   try { await photo.decode(); } catch { if (!photo.complete || !photo.naturalWidth) return; }
   if (request !== slideRequest || target === current) return;
-  clearTimeout(fadeTimer);
-  slides.forEach(slide => slide.classList.remove('is-leaving'));
-  if (!mobileMotion.matches && !reducedMotion.matches) slides[current].classList.add('is-leaving');
   current = target;
   slides.forEach((slide, index) => {
    slide.classList.toggle('is-active', index === current);
@@ -129,7 +124,6 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   });
   dots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === current)));
   carousel.querySelector('.gallery-current-caption').textContent = slides[current].querySelector('figcaption').textContent;
-  fadeTimer = setTimeout(() => slides.forEach(slide => slide.classList.remove('is-leaving')), (reducedMotion.matches || mobileMotion.matches) ? 0 : 950);
  }
  function schedule() {
   clearInterval(timer);
@@ -160,8 +154,5 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  reducedMotion.addEventListener('change', event => { if(event.matches) { paused = true; updateToggle(); schedule(); } });
  updateToggle(); schedule();
 
- mobileMotion.addEventListener('change', () => {
-  slides.forEach(slide => slide.classList.remove('is-leaving'));
- });
 </script>
 </body></html>
