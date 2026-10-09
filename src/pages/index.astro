@@ -160,51 +160,8 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  reducedMotion.addEventListener('change', event => { if(event.matches) { paused = true; updateToggle(); schedule(); } });
  updateToggle(); schedule();
 
- // Animate only text, before it becomes visible. Photos and section geometry stay still.
- const revealTexts = [...document.querySelectorAll('.section-heading > div, .gallery-copy, .about-copy, .steps-section > div, .space-copy, .reviews-layout > div, .contact-grid > div:first-child, .map-heading > div')];
- let textObserver;
- const textAnimations = new Map();
- const revealedTexts = new WeakSet();
- function configureTextMotion() {
-  textObserver?.disconnect();
-  textAnimations.forEach(animation => animation.cancel());
-  textAnimations.clear();
-  if (mobileMotion.matches || reducedMotion.matches || !('IntersectionObserver' in window) || !Element.prototype.animate) return;
-  // Already visible content never fades out when this script initializes.
-  revealTexts.forEach(text => {
-   if (text.getBoundingClientRect().top < window.innerHeight) revealedTexts.add(text);
-  });
-  textObserver = new IntersectionObserver(entries => {
-   entries.forEach(entry => {
-    const text = entry.target;
-    if (!entry.isIntersecting || revealedTexts.has(text)) return;
-    revealedTexts.add(text);
-    textObserver.unobserve(text);
-    if (text.contains(document.activeElement)) return;
-    const animation = text.animate([{ opacity: .65 }, { opacity: 1 }], {
-     duration: 500, easing: 'ease-out'
-    });
-    textAnimations.set(text, animation);
-    animation.onfinish = () => textAnimations.delete(text);
-   });
-  }, { threshold: 0, rootMargin: '0px 0px 40px 0px' });
-  revealTexts.forEach(text => { if (!revealedTexts.has(text)) textObserver.observe(text); });
- }
- document.addEventListener('focusin', event => {
-  revealTexts.forEach(text => {
-   if (text.contains(event.target)) {
-    revealedTexts.add(text);
-    textObserver?.unobserve(text);
-    textAnimations.get(text)?.cancel();
-    textAnimations.delete(text);
-   }
-  });
- });
- reducedMotion.addEventListener('change', configureTextMotion);
  mobileMotion.addEventListener('change', () => {
-  configureTextMotion();
   slides.forEach(slide => slide.classList.remove('is-leaving'));
  });
- configureTextMotion();
 </script>
 </body></html>
