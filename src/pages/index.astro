@@ -66,7 +66,7 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  <section class="gallery-section" aria-labelledby="gallery-title"><div class="container"><div class="gallery-layout gallery-panel">
   <div class="gallery-copy"><p class="eyebrow">UM POUCO DO MEU TRABALHO</p><h2 id="gallery-title">Cada detalhe,<br /><em>um cuidado.</em></h2><p>Por trás de cada procedimento, existe uma pessoa, uma história e um desejo de se sentir bem. Conheça um pouco desses momentos de cuidado.</p><a class="text-link" href={whatsapp()} target="_blank" rel="noopener noreferrer">Converse sobre o seu cuidado <span aria-hidden="true">↗</span></a></div>
   <div class="carousel" role="region" aria-roledescription="carrossel" aria-label="Fotos de atendimentos e procedimentos">
-   <div class="carousel-viewport" style="--photo-ratio: 0.666041276" tabindex="0" aria-label="Galeria de fotos. Use as setas para navegar."><div class="carousel-track">{gallery.map((photo, index) => <figure class:list={["carousel-slide", { "is-active": index === 0 }]} role="group" aria-roledescription="slide" aria-label={`${index + 1} de ${gallery.length}`} aria-hidden={index !== 0}><img src={photo.src} alt={photo.alt} width="1080" height="1080" loading="lazy" /><figcaption class="sr-only">{photo.label}</figcaption></figure>)}</div></div>
+   <div class="carousel-stage"><div class="carousel-viewport" style="--photo-ratio: 0.666041276" tabindex="0" aria-label="Galeria de fotos. Use as setas para navegar."><div class="carousel-track">{gallery.map((photo, index) => <figure class:list={["carousel-slide", { "is-active": index === 0 }]} role="group" aria-roledescription="slide" aria-label={`${index + 1} de ${gallery.length}`} aria-hidden={index !== 0}><img src={photo.src} alt={photo.alt} width="1080" height="1080" loading="lazy" /><figcaption class="sr-only">{photo.label}</figcaption></figure>)}</div></div></div>
    <p class="gallery-current-caption" aria-hidden="true">{gallery[0].label}</p>
    <div class="carousel-controls"><div class="carousel-dots" role="group" aria-label="Escolher foto">{gallery.map((photo, index) => <button type="button" class="carousel-dot" aria-label={`Mostrar foto: ${photo.label}`} aria-pressed={index === 0} data-slide={index}></button>)}</div><div class="carousel-actions"><button type="button" class="carousel-toggle" aria-label="Pausar avanço automático">Pausar</button><button type="button" class="carousel-prev" aria-label="Foto anterior">←</button><button type="button" class="carousel-next" aria-label="Próxima foto">→</button></div></div>
    <p class="gallery-note">Cada pessoa tem características próprias. Os resultados variam e dependem de avaliação individual.</p>
@@ -116,8 +116,18 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  let hovering = false;
  let focused = false;
  let timer;
- function renderSlide(next) {
-  current = (next + slides.length) % slides.length;
+ let slideRequest = 0;
+ let fadeTimer;
+ async function renderSlide(next) {
+  const target = (next + slides.length) % slides.length;
+  const request = ++slideRequest;
+  const photo = galleryImages[target];
+  try { await photo.decode(); } catch { if (!photo.complete || !photo.naturalWidth) return; }
+  if (request !== slideRequest || target === current) return;
+  clearTimeout(fadeTimer);
+  slides.forEach(slide => slide.classList.remove('is-leaving'));
+  slides[current].classList.add('is-leaving');
+  current = target;
   fitPhotoFrame();
   slides.forEach((slide, index) => {
    slide.classList.toggle('is-active', index === current);
@@ -125,6 +135,7 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   });
   dots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === current)));
   carousel.querySelector('.gallery-current-caption').textContent = slides[current].querySelector('figcaption').textContent;
+  fadeTimer = setTimeout(() => slides.forEach(slide => slide.classList.remove('is-leaving')), reducedMotion.matches ? 0 : 950);
  }
  function schedule() {
   clearInterval(timer);
@@ -155,50 +166,43 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  reducedMotion.addEventListener('change', event => { if(event.matches) { paused = true; updateToggle(); schedule(); } });
  fitPhotoFrame(); updateToggle(); schedule();
 
- // Each section enters like a new chapter; native scrolling stays available.
+ // Reveal once per page load. Never observe an element while transforming it.
  const chapters = [...document.querySelectorAll('main > section:not(#inicio):not(#consultorio), #consultorio .space-row')];
+ const revealedChapters = new WeakSet();
  const chapterAnimations = new Map();
  let chapterObserver;
- let lastScrollY = window.scrollY;
- let scrollDirection = 1;
- window.addEventListener('scroll', () => {
-  const y = window.scrollY;
-  if (Math.abs(y - lastScrollY) > 2) scrollDirection = y >= lastScrollY ? 1 : -1;
-  lastScrollY = y;
- }, { passive: true });
  function configureChapterMotion() {
   chapterObserver?.disconnect();
   chapterAnimations.forEach(animation => animation.cancel());
   chapterAnimations.clear();
   if (reducedMotion.matches || !('IntersectionObserver' in window) || !Element.prototype.animate) return;
-  const entered = new WeakSet();
   chapterObserver = new IntersectionObserver(entries => {
    entries.forEach(entry => {
+    if (!entry.isIntersecting || revealedChapters.has(entry.target)) return;
     const section = entry.target;
-    if (!entry.isIntersecting) {
-     entered.delete(section);
-     chapterAnimations.get(section)?.cancel();
-     chapterAnimations.delete(section);
-     return;
-    }
-    if (entered.has(section)) return;
-    entered.add(section);
-    // A restored scroll position or an anchor must remain immediately readable.
+    revealedChapters.add(section);
+    chapterObserver.unobserve(section);
     if (section.getBoundingClientRect().top < 110 || section.contains(document.activeElement)) return;
-    const distance = window.innerWidth < 768 ? 30 : 60;
     const animation = section.animate([
-     { opacity: .25, transform: `translateY(${distance * scrollDirection}px) scale(.985)` },
-     { opacity: 1, transform: 'translateY(0) scale(1)' }
-    ], { duration: 850, easing: 'cubic-bezier(.22, 1, .36, 1)' });
+     { transform: 'translate3d(0, 24px, 0)' },
+     { transform: 'translate3d(0, 0, 0)' }
+    ], { duration: 650, easing: 'cubic-bezier(.22, 1, .36, 1)' });
     chapterAnimations.set(section, animation);
     animation.onfinish = () => chapterAnimations.delete(section);
    });
-  }, { threshold: 0, rootMargin: '0px 0px -9% 0px' });
-  chapters.forEach(section => chapterObserver.observe(section));
+  }, { threshold: 0, rootMargin: '0px 0px -6% 0px' });
+  chapters.forEach(section => {
+   if (!revealedChapters.has(section)) chapterObserver.observe(section);
+  });
  }
  document.addEventListener('focusin', event => {
   chapters.forEach(section => {
-   if (section.contains(event.target)) { chapterAnimations.get(section)?.cancel(); chapterAnimations.delete(section); }
+   if (section.contains(event.target)) {
+    revealedChapters.add(section);
+    chapterObserver?.unobserve(section);
+    chapterAnimations.get(section)?.cancel();
+    chapterAnimations.delete(section);
+   }
   });
  });
  reducedMotion.addEventListener('change', configureChapterMotion);

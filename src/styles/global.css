@@ -57,3 +57,16 @@ main>section,#consultorio .space-row{transform-origin:50% 30%;scroll-margin-top:
 @media(max-width:1023px){.gallery-panel .carousel-viewport{width:min(100%,calc(520px * var(--photo-ratio, .666041276)))}}
 @media(max-width:767px){.gallery-panel .carousel-viewport{width:100%;border-top-right-radius:30px}}
 @media(prefers-reduced-motion:reduce){.gallery-panel .carousel-viewport{transition:none}}
+
+/* Stable gallery footprint prevents all following sections from jumping. */
+.gallery-panel .carousel{--gallery-height:580px}
+.gallery-panel .carousel-stage{height:var(--gallery-height);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gallery-panel .carousel-viewport{width:min(100%,calc(var(--gallery-height) * var(--photo-ratio,.666041276)));flex:none;transition:none}
+.gallery-panel .carousel-slide{transition:opacity .9s ease;transform:none;opacity:0;z-index:0}
+.gallery-panel .carousel-slide.is-leaving{opacity:1;z-index:1;transition:none}
+.gallery-panel .carousel-slide.is-active{opacity:1;z-index:2}
+.gallery-panel .carousel-slide img{display:block}
+.gallery-current-caption{min-height:2.6em}
+@media(max-width:1023px){.gallery-panel .carousel{--gallery-height:520px}}
+@media(max-width:767px){.gallery-panel .carousel{--gallery-height:clamp(340px,72svh,560px)}.gallery-panel .carousel-viewport{width:min(100%,calc(var(--gallery-height) * var(--photo-ratio,.666041276)))}}
+@media(prefers-reduced-motion:reduce){.gallery-panel .carousel-slide{transition:none}}
