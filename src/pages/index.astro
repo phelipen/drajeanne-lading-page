@@ -102,13 +102,6 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  const slides = [...carousel.querySelectorAll('.carousel-slide')];
  const dots = [...carousel.querySelectorAll('.carousel-dot')];
  const galleryImages = slides.map(slide => slide.querySelector('img'));
- function fitPhotoFrame() {
-  const photo = galleryImages[current];
-  if (photo?.naturalWidth && photo?.naturalHeight) {
-   viewport.style.setProperty('--photo-ratio', String(photo.naturalWidth / photo.naturalHeight));
-  }
- }
- galleryImages.forEach(photo => photo.addEventListener('load', fitPhotoFrame));
  const toggle = carousel.querySelector('.carousel-toggle');
  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
  let current = 0;
@@ -128,7 +121,6 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   slides.forEach(slide => slide.classList.remove('is-leaving'));
   slides[current].classList.add('is-leaving');
   current = target;
-  fitPhotoFrame();
   slides.forEach((slide, index) => {
    slide.classList.toggle('is-active', index === current);
    slide.setAttribute('aria-hidden', String(index !== current));
@@ -164,48 +156,49 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  viewport.addEventListener('touchend', event => { const dx = event.changedTouches[0].clientX - touchX; const dy = event.changedTouches[0].clientY - touchY; if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) navigate(current + (dx < 0 ? 1 : -1)); }, { passive: true });
  document.addEventListener('visibilitychange', schedule);
  reducedMotion.addEventListener('change', event => { if(event.matches) { paused = true; updateToggle(); schedule(); } });
- fitPhotoFrame(); updateToggle(); schedule();
+ updateToggle(); schedule();
 
- // Reveal once per page load. Never observe an element while transforming it.
- const chapters = [...document.querySelectorAll('main > section:not(#inicio):not(#consultorio), #consultorio .space-row')];
- const revealedChapters = new WeakSet();
- const chapterAnimations = new Map();
- let chapterObserver;
- function configureChapterMotion() {
-  chapterObserver?.disconnect();
-  chapterAnimations.forEach(animation => animation.cancel());
-  chapterAnimations.clear();
+ // Animate only text, before it becomes visible. Photos and section geometry stay still.
+ const revealTexts = [...document.querySelectorAll('.section-heading > div, .gallery-copy, .about-copy, .steps-section > div, .space-copy, .reviews-layout > div, .contact-grid > div:first-child, .map-heading > div')];
+ let textObserver;
+ const textAnimations = new Map();
+ const revealedTexts = new WeakSet();
+ function configureTextMotion() {
+  textObserver?.disconnect();
+  textAnimations.forEach(animation => animation.cancel());
+  textAnimations.clear();
   if (reducedMotion.matches || !('IntersectionObserver' in window) || !Element.prototype.animate) return;
-  chapterObserver = new IntersectionObserver(entries => {
-   entries.forEach(entry => {
-    if (!entry.isIntersecting || revealedChapters.has(entry.target)) return;
-    const section = entry.target;
-    revealedChapters.add(section);
-    chapterObserver.unobserve(section);
-    if (section.getBoundingClientRect().top < 110 || section.contains(document.activeElement)) return;
-    const animation = section.animate([
-     { transform: 'translate3d(0, 24px, 0)' },
-     { transform: 'translate3d(0, 0, 0)' }
-    ], { duration: 650, easing: 'cubic-bezier(.22, 1, .36, 1)' });
-    chapterAnimations.set(section, animation);
-    animation.onfinish = () => chapterAnimations.delete(section);
-   });
-  }, { threshold: 0, rootMargin: '0px 0px -6% 0px' });
-  chapters.forEach(section => {
-   if (!revealedChapters.has(section)) chapterObserver.observe(section);
+  // Already visible content never fades out when this script initializes.
+  revealTexts.forEach(text => {
+   if (text.getBoundingClientRect().top < window.innerHeight) revealedTexts.add(text);
   });
+  textObserver = new IntersectionObserver(entries => {
+   entries.forEach(entry => {
+    const text = entry.target;
+    if (!entry.isIntersecting || revealedTexts.has(text)) return;
+    revealedTexts.add(text);
+    textObserver.unobserve(text);
+    if (text.contains(document.activeElement)) return;
+    const animation = text.animate([{ opacity: .65 }, { opacity: 1 }], {
+     duration: 500, easing: 'ease-out'
+    });
+    textAnimations.set(text, animation);
+    animation.onfinish = () => textAnimations.delete(text);
+   });
+  }, { threshold: 0, rootMargin: '0px 0px 40px 0px' });
+  revealTexts.forEach(text => { if (!revealedTexts.has(text)) textObserver.observe(text); });
  }
  document.addEventListener('focusin', event => {
-  chapters.forEach(section => {
-   if (section.contains(event.target)) {
-    revealedChapters.add(section);
-    chapterObserver?.unobserve(section);
-    chapterAnimations.get(section)?.cancel();
-    chapterAnimations.delete(section);
+  revealTexts.forEach(text => {
+   if (text.contains(event.target)) {
+    revealedTexts.add(text);
+    textObserver?.unobserve(text);
+    textAnimations.get(text)?.cancel();
+    textAnimations.delete(text);
    }
   });
  });
- reducedMotion.addEventListener('change', configureChapterMotion);
- configureChapterMotion();
+ reducedMotion.addEventListener('change', configureTextMotion);
+ configureTextMotion();
 </script>
 </body></html>

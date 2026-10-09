@@ -70,3 +70,15 @@ main>section,#consultorio .space-row{transform-origin:50% 30%;scroll-margin-top:
 @media(max-width:1023px){.gallery-panel .carousel{--gallery-height:520px}}
 @media(max-width:767px){.gallery-panel .carousel{--gallery-height:clamp(340px,72svh,560px)}.gallery-panel .carousel-viewport{width:min(100%,calc(var(--gallery-height) * var(--photo-ratio,.666041276)))}}
 @media(prefers-reduced-motion:reduce){.gallery-panel .carousel-slide{transition:none}}
+
+/* No animated geometry: each photo owns its frame inside a stable stage. */
+.gallery-panel .carousel-viewport{width:100%;height:100%;aspect-ratio:auto;max-height:none;border-radius:0;overflow:hidden;background:transparent;transition:none}
+.gallery-panel .carousel-track{height:100%;width:100%}
+.gallery-panel .carousel-slide{display:flex;align-items:center;justify-content:center;position:absolute;inset:0;transform:none;transition:opacity .65s ease}
+.gallery-panel .carousel-slide img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;aspect-ratio:auto;border-radius:3px 30px 3px 3px;background:transparent}
+.gallery-panel .carousel-slide.is-leaving{opacity:1;z-index:1;transition:none}
+.gallery-panel .carousel-slide.is-active{opacity:1;z-index:2}
+@media(max-width:767px){.gallery-panel .carousel-viewport{width:100%;height:100%;border-radius:0}.gallery-panel .carousel-slide img{border-top-right-radius:24px}}
+@media(prefers-reduced-motion:reduce){.gallery-panel .carousel-slide{transition:none}}
+/* Avoid repainting a blurred sticky layer over moving images. */
+.header{background:var(--cream);backdrop-filter:none;-webkit-backdrop-filter:none}
