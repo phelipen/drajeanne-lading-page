@@ -33,6 +33,35 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  <meta property="og:title" content="Dra. Jeanne Menezes · Estética com identidade" />
  <meta property="og:description" content="Se reconhecer no espelho te coloca em outra posição. Conheça os cuidados e agende sua avaliação em Icaraí, Niterói." />
  <meta property="og:image" content={new URL('/images/jeanne.jpg', Astro.site ?? Astro.url).href} />
+  <style is:global>
+    /* Links sem sublinhado, inclusive ao passar o mouse ou navegar pelo teclado. */
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active,
+    a:focus-visible,
+    a * {
+      text-decoration: none !important;
+      text-decoration-line: none !important;
+    }
+
+    /* Alguns estilos usam uma borda inferior para simular o sublinhado. */
+    a.text-link,
+    a.text-link:hover,
+    .desktop-nav a,
+    .desktop-nav a:hover,
+    #mobile-menu a,
+    #mobile-menu a:hover {
+      border-bottom: 0 !important;
+    }
+
+    /* Mantém a identificação dos links para navegação por teclado. */
+    a:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+    }
+  </style>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
