@@ -104,6 +104,7 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  const galleryImages = slides.map(slide => slide.querySelector('img'));
  const toggle = carousel.querySelector('.carousel-toggle');
  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+ const mobileMotion = window.matchMedia('(max-width: 767px), (hover: none) and (pointer: coarse)');
  let current = 0;
  let paused = reducedMotion.matches;
  let hovering = false;
@@ -115,11 +116,12 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   const target = (next + slides.length) % slides.length;
   const request = ++slideRequest;
   const photo = galleryImages[target];
+  photo.loading = 'eager';
   try { await photo.decode(); } catch { if (!photo.complete || !photo.naturalWidth) return; }
   if (request !== slideRequest || target === current) return;
   clearTimeout(fadeTimer);
   slides.forEach(slide => slide.classList.remove('is-leaving'));
-  slides[current].classList.add('is-leaving');
+  if (!mobileMotion.matches && !reducedMotion.matches) slides[current].classList.add('is-leaving');
   current = target;
   slides.forEach((slide, index) => {
    slide.classList.toggle('is-active', index === current);
@@ -127,7 +129,7 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   });
   dots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === current)));
   carousel.querySelector('.gallery-current-caption').textContent = slides[current].querySelector('figcaption').textContent;
-  fadeTimer = setTimeout(() => slides.forEach(slide => slide.classList.remove('is-leaving')), reducedMotion.matches ? 0 : 950);
+  fadeTimer = setTimeout(() => slides.forEach(slide => slide.classList.remove('is-leaving')), (reducedMotion.matches || mobileMotion.matches) ? 0 : 950);
  }
  function schedule() {
   clearInterval(timer);
@@ -167,7 +169,7 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   textObserver?.disconnect();
   textAnimations.forEach(animation => animation.cancel());
   textAnimations.clear();
-  if (reducedMotion.matches || !('IntersectionObserver' in window) || !Element.prototype.animate) return;
+  if (mobileMotion.matches || reducedMotion.matches || !('IntersectionObserver' in window) || !Element.prototype.animate) return;
   // Already visible content never fades out when this script initializes.
   revealTexts.forEach(text => {
    if (text.getBoundingClientRect().top < window.innerHeight) revealedTexts.add(text);
@@ -199,6 +201,10 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   });
  });
  reducedMotion.addEventListener('change', configureTextMotion);
+ mobileMotion.addEventListener('change', () => {
+  configureTextMotion();
+  slides.forEach(slide => slide.classList.remove('is-leaving'));
+ });
  configureTextMotion();
 </script>
 </body></html>

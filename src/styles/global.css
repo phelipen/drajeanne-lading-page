@@ -82,3 +82,17 @@ main>section,#consultorio .space-row{transform-origin:50% 30%;scroll-margin-top:
 @media(prefers-reduced-motion:reduce){.gallery-panel .carousel-slide{transition:none}}
 /* Avoid repainting a blurred sticky layer over moving images. */
 .header{background:var(--cream);backdrop-filter:none;-webkit-backdrop-filter:none}
+
+/* Mobile stability: no opacity compositing or viewport-height-dependent gallery. */
+@media (max-width:767px), (hover:none) and (pointer:coarse){
+ html{scroll-behavior:auto}
+ .gallery-panel .carousel{--gallery-height:480px}
+ .gallery-panel .carousel-stage{height:480px}
+ .gallery-panel .carousel-slide{display:none;opacity:1;transform:none;transition:none;z-index:auto}
+ .gallery-panel .carousel-slide.is-active{display:flex;opacity:1;z-index:auto}
+ .gallery-panel .carousel-slide.is-leaving:not(.is-active){display:none}
+ .gallery-panel .carousel-slide img{border-radius:0}
+ .gallery-panel .carousel-viewport,.gallery-panel .carousel-track{isolation:auto;transform:none;transition:none;border-radius:0}
+ .header{backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+@media(max-width:380px){.gallery-panel .carousel{--gallery-height:410px}.gallery-panel .carousel-stage{height:410px}}
