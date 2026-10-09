@@ -25,6 +25,12 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
 <!doctype html>
 <html lang="pt-BR">
 <head>
+ <!-- Habilita entradas suaves somente quando ha suporte e movimento permitido. -->
+ <script is:inline>
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+   document.documentElement.classList.add('motion-ready');
+  }
+ </script>
  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
  <title>Dra. Jeanne Menezes | Farmacêutica Esteta em Icaraí</title>
  <meta name="description" content="Dra. Jeanne Menezes, farmacêutica esteta em Icaraí, Niterói. Toxina botulínica, bioestimulador de colágeno e preenchimento com ácido hialurônico. Agende sua avaliação." />
@@ -76,24 +82,24 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
 </header>
 <main id="conteudo">
  <section id="inicio" class="hero container">
-  <div class="hero-copy"><p class="eyebrow">ESTÉTICA COM IDENTIDADE</p>
+  <div class="hero-copy" data-reveal="text"><p class="eyebrow">ESTÉTICA COM IDENTIDADE</p>
    <h1>Se reconhecer<br class="hidden sm:block" /> no espelho te coloca em <em>outra posição.</em></h1>
    <p class="hero-description">Um convite para olhar para você com mais carinho. Cuidado estético com a Dra. Jeanne Menezes, em Icaraí, Niterói.</p>
    <a class="button" href={whatsapp()} target="_blank" rel="noopener noreferrer">Agende seu momento <span aria-hidden="true">↗</span></a>
    <a class="hero-rating" href="#avaliacoes" aria-label="Leia os depoimentos: nota 5 de 5 e 33 avaliações no Google"><span class="review-stars" aria-hidden="true">★★★★★</span><span><strong>5,0</strong> · 33 avaliações no Google</span></a>
    <div class="hero-location"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Icaraí, Niterói <span class="dot">·</span> Atendimento com hora marcada</span></div>
   </div>
-  <div class="hero-visual"><div class="photo-frame"><img src="/images/jeanne.jpg" alt="Dra. Jeanne Menezes sorrindo em seu consultório" width="933" height="1400" fetchpriority="high" /></div><div class="photo-caption"><span>Dra. Jeanne Menezes</span><small>FARMACÊUTICA ESTETA</small></div><span class="vertical-note" aria-hidden="true">SUA BELEZA. SUA ESSÊNCIA.</span></div>
+  <div class="hero-visual" data-reveal="photo"><div class="photo-frame"><img src="/images/jeanne.jpg" alt="Dra. Jeanne Menezes sorrindo em seu consultório" width="933" height="1400" fetchpriority="high" /></div><div class="photo-caption"><span>Dra. Jeanne Menezes</span><small>FARMACÊUTICA ESTETA</small></div><span class="vertical-note" aria-hidden="true">SUA BELEZA. SUA ESSÊNCIA.</span></div>
  </section>
- <div class="values-strip"><div class="container flex flex-wrap justify-between gap-5"><span>Um olhar para você</span><i aria-hidden="true">✧</i><span>Sua identidade em primeiro lugar</span><i aria-hidden="true">✧</i><span>Cuidado em cada escolha</span></div></div>
+ <div class="values-strip"><div class="container flex flex-wrap justify-between gap-5" data-reveal="text"><span>Um olhar para você</span><i aria-hidden="true">✧</i><span>Sua identidade em primeiro lugar</span><i aria-hidden="true">✧</i><span>Cuidado em cada escolha</span></div></div>
  <section id="procedimentos" class="section container">
-  <div class="section-heading"><div><p class="eyebrow">CUIDADOS QUE VALORIZAM VOCÊ</p><h2>Beleza nos detalhes.<br /><em>Essência por inteiro.</em></h2></div><p>Conheça os procedimentos e converse sobre o que faz sentido para o seu momento.</p></div>
-  <div class="grid md:grid-cols-3 gap-6 mt-12">{procedures.map(p => <article class="procedure"><div class="flex items-center justify-between"><svg class="procedure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={p.path}/></svg></div><p class="procedure-subtitle">{p.subtitle}</p><h3>{p.title}</h3><p class="procedure-description">{p.text}</p><a href={whatsapp(`saber mais sobre ${p.title.toLowerCase()}`)} target="_blank" rel="noopener noreferrer" aria-label={`Conversar sobre ${p.title}`}>Quero saber mais <span aria-hidden="true">↗</span></a></article>)}</div>
-  <p class="procedure-note">A indicação de cada procedimento depende de avaliação individual.</p>
+  <div class="section-heading" data-reveal="text"><div><p class="eyebrow">CUIDADOS QUE VALORIZAM VOCÊ</p><h2>Beleza nos detalhes.<br /><em>Essência por inteiro.</em></h2></div><p>Conheça os procedimentos e converse sobre o que faz sentido para o seu momento.</p></div>
+  <div class="grid md:grid-cols-3 gap-6 mt-12">{procedures.map(p => <article class="procedure" data-reveal="card"><div class="flex items-center justify-between"><svg class="procedure-icon" viewBox="0 0 24 24" aria-hidden="true"><path d={p.path}/></svg></div><p class="procedure-subtitle">{p.subtitle}</p><h3>{p.title}</h3><p class="procedure-description">{p.text}</p><a href={whatsapp(`saber mais sobre ${p.title.toLowerCase()}`)} target="_blank" rel="noopener noreferrer" aria-label={`Conversar sobre ${p.title}`}>Quero saber mais <span aria-hidden="true">↗</span></a></article>)}</div>
+  <p class="procedure-note" data-reveal="text">A indicação de cada procedimento depende de avaliação individual.</p>
  </section>
 
  <section class="gallery-section" aria-labelledby="gallery-title"><div class="container"><div class="gallery-layout gallery-panel">
-  <div class="gallery-copy"><p class="eyebrow">UM POUCO DO MEU TRABALHO</p><h2 id="gallery-title">Cada detalhe,<br /><em>um cuidado.</em></h2><p>Por trás de cada procedimento, existe uma pessoa, uma história e um desejo de se sentir bem. Conheça um pouco desses momentos de cuidado.</p><a class="text-link" href={whatsapp()} target="_blank" rel="noopener noreferrer">Converse sobre o seu cuidado <span aria-hidden="true">↗</span></a></div>
+  <div class="gallery-copy" data-reveal="text"><p class="eyebrow">UM POUCO DO MEU TRABALHO</p><h2 id="gallery-title">Cada detalhe,<br /><em>um cuidado.</em></h2><p>Por trás de cada procedimento, existe uma pessoa, uma história e um desejo de se sentir bem. Conheça um pouco desses momentos de cuidado.</p><a class="text-link" href={whatsapp()} target="_blank" rel="noopener noreferrer">Converse sobre o seu cuidado <span aria-hidden="true">↗</span></a></div>
   <div class="carousel" role="region" aria-roledescription="carrossel" aria-label="Fotos de atendimentos e procedimentos">
    <div class="carousel-stage"><div class="carousel-viewport" style="--photo-ratio: 0.666041276" tabindex="0" aria-label="Galeria de fotos. Use as setas para navegar."><div class="carousel-track">{gallery.map((photo, index) => <figure class:list={["carousel-slide", { "is-active": index === 0 }]} role="group" aria-roledescription="slide" aria-label={`${index + 1} de ${gallery.length}`} aria-hidden={index !== 0}><img src={photo.src} alt={photo.alt} width="1080" height="1080" loading="lazy" /><figcaption class="sr-only">{photo.label}</figcaption></figure>)}</div></div></div>
    <p class="gallery-current-caption" aria-hidden="true">{gallery[0].label}</p>
@@ -101,18 +107,18 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
    <p class="gallery-note">Cada pessoa tem características próprias. Os resultados variam e dependem de avaliação individual.</p>
   </div>
  </div></div></section>
- <section id="sobre" class="about-section"><div class="container about-grid"><div class="about-image"><img src="/images/jeanne.jpg" alt="Jeanne Menezes, farmacêutica esteta" width="933" height="1400" loading="lazy" /><span class="image-label">PRAZER, JEANNE.</span></div><div class="about-copy"><p class="eyebrow">QUEM VAI CUIDAR DE VOCÊ</p><h2>Dra. Jeanne<br /><em>Menezes</em></h2><p class="about-role">Farmacêutica Esteta</p><p>Sou Jeanne Menezes, farmacêutica esteta, e acredito que o cuidado com a beleza começa na forma como você se vê. Meu convite é para que esse momento seja também um encontro com a sua identidade, respeitando aquilo que faz você ser única.</p><p>Meu trabalho reúne toxina botulínica, bioestimulador de colágeno e preenchimento com ácido hialurônico. A escolha de um procedimento começa por compreender suas expectativas e avaliar o que faz sentido para você.</p><p>Para mim, cuidar também é abrir espaço para a conversa: entender o que você deseja, esclarecer dúvidas e falar sobre possibilidades e limites. Você não precisa chegar com um procedimento escolhido. Pode começar contando como se sente.</p><p>Recebo você em Icaraí, Niterói, de segunda a sexta-feira, com hora marcada. Vamos conversar sobre o seu próximo cuidado?</p><a class="text-link" href="https://www.instagram.com/drajeannemenezes/" target="_blank" rel="noopener noreferrer">Conheça meu Instagram <span aria-hidden="true">↗</span></a></div></div></section>
- <section class="section container steps-section"><div><p class="eyebrow">SEU PRIMEIRO PASSO</p><h2>O cuidado começa<br /><em>com uma conversa.</em></h2></div><ol class="steps"><li><span>01</span><div><h3>Vamos conversar</h3><p>Entre em contato pelo WhatsApp e conte o que você procura.</p></div></li><li><span>02</span><div><h3>Reserve seu horário</h3><p>Consulte a disponibilidade de segunda a sexta-feira.</p></div></li><li><span>03</span><div><h3>Venha para sua avaliação</h3><p>Converse sobre suas expectativas e tire suas dúvidas pessoalmente.</p></div></li></ol></section>
+ <section id="sobre" class="about-section"><div class="container about-grid"><div class="about-image" data-reveal="photo"><img src="/images/jeanne.jpg" alt="Jeanne Menezes, farmacêutica esteta" width="933" height="1400" loading="lazy" /><span class="image-label">PRAZER, JEANNE.</span></div><div class="about-copy" data-reveal="text"><p class="eyebrow">QUEM VAI CUIDAR DE VOCÊ</p><h2>Dra. Jeanne<br /><em>Menezes</em></h2><p class="about-role">Farmacêutica Esteta</p><p>Sou Jeanne Menezes, farmacêutica esteta, e acredito que o cuidado com a beleza começa na forma como você se vê. Meu convite é para que esse momento seja também um encontro com a sua identidade, respeitando aquilo que faz você ser única.</p><p>Meu trabalho reúne toxina botulínica, bioestimulador de colágeno e preenchimento com ácido hialurônico. A escolha de um procedimento começa por compreender suas expectativas e avaliar o que faz sentido para você.</p><p>Para mim, cuidar também é abrir espaço para a conversa: entender o que você deseja, esclarecer dúvidas e falar sobre possibilidades e limites. Você não precisa chegar com um procedimento escolhido. Pode começar contando como se sente.</p><p>Recebo você em Icaraí, Niterói, de segunda a sexta-feira, com hora marcada. Vamos conversar sobre o seu próximo cuidado?</p><a class="text-link" href="https://www.instagram.com/drajeannemenezes/" target="_blank" rel="noopener noreferrer">Conheça meu Instagram <span aria-hidden="true">↗</span></a></div></div></section>
+ <section class="section container steps-section"><div data-reveal="text"><p class="eyebrow">SEU PRIMEIRO PASSO</p><h2>O cuidado começa<br /><em>com uma conversa.</em></h2></div><ol class="steps"><li data-reveal="card"><span>01</span><div><h3>Vamos conversar</h3><p>Entre em contato pelo WhatsApp e conte o que você procura.</p></div></li><li data-reveal="card"><span>02</span><div><h3>Reserve seu horário</h3><p>Consulte a disponibilidade de segunda a sexta-feira.</p></div></li><li data-reveal="card"><span>03</span><div><h3>Venha para sua avaliação</h3><p>Converse sobre suas expectativas e tire suas dúvidas pessoalmente.</p></div></li></ol></section>
 
  <section id="consultorio" class="space-section" aria-labelledby="space-title"><div class="container">
-  <div class="space-row"><div class="space-photo"><img src="/images/consultorio.jpeg" alt="Consultório da Dra. Jeanne Menezes, com cadeira de atendimento, bancada clara e detalhes em madeira" width="1080" height="1440" loading="lazy" /></div><div class="space-copy"><p class="eyebrow">SEU ESPAÇO DE CUIDADO EM ICARAÍ</p><h2 id="space-title">Um ambiente para<br /><em>se sentir à vontade.</em></h2><p>Em Icaraí, Niterói, você encontra um espaço para deixar a correria lá fora e olhar com carinho para si. Quero que se sinta acolhida desde a chegada, à vontade para conversar, dividir suas expectativas e viver esse momento no seu tempo.</p><p>Aqui, o atendimento acontece com hora marcada, para que você tenha um momento dedicado ao seu cuidado e à conversa com a Dra. Jeanne.</p><div class="space-address"><span class="eyebrow">ONDE ENCONTRAR</span><address>Avenida Sete de Setembro, 317 · Sala 602<br />Icaraí, Niterói · RJ</address><a class="text-link" href="#localizacao">Veja a localização <span aria-hidden="true">↓</span></a></div></div></div>
-  <div class="space-row welcome-row"><div class="space-copy"><p class="eyebrow">CARINHO QUE SE PERCEBE</p><h2>Bem recebida.<br /><em>Do começo ao fim.</em></h2><p>Uma pausa, um café e pequenos gestos que fazem você se sentir especial. O acolhimento está também nos detalhes de cada visita.</p><p>Mais do que reservar um horário, é ter espaço para ser ouvida, conversar sobre suas expectativas e tirar dúvidas com tranquilidade. Queremos que você se sinta bem desde a chegada.</p><a class="text-link" href={whatsapp()} target="_blank" rel="noopener noreferrer">Reserve seu momento <span aria-hidden="true">↗</span></a></div><div class="space-photo welcome-photo"><img src="/images/acolhimento.jpeg" alt="Bandeja de boas-vindas com café, água e um pequeno mimo na recepção da Essencial Clinic" width="1080" height="1440" loading="lazy" /></div></div>
+  <div class="space-row"><div class="space-photo" data-reveal="photo"><img src="/images/consultorio.jpeg" alt="Consultório da Dra. Jeanne Menezes, com cadeira de atendimento, bancada clara e detalhes em madeira" width="1080" height="1440" loading="lazy" /></div><div class="space-copy" data-reveal="text"><p class="eyebrow">SEU ESPAÇO DE CUIDADO EM ICARAÍ</p><h2 id="space-title">Um ambiente para<br /><em>se sentir à vontade.</em></h2><p>Em Icaraí, Niterói, você encontra um espaço para deixar a correria lá fora e olhar com carinho para si. Quero que se sinta acolhida desde a chegada, à vontade para conversar, dividir suas expectativas e viver esse momento no seu tempo.</p><p>Aqui, o atendimento acontece com hora marcada, para que você tenha um momento dedicado ao seu cuidado e à conversa com a Dra. Jeanne.</p><div class="space-address"><span class="eyebrow">ONDE ENCONTRAR</span><address>Avenida Sete de Setembro, 317 · Sala 602<br />Icaraí, Niterói · RJ</address><a class="text-link" href="#localizacao">Veja a localização <span aria-hidden="true">↓</span></a></div></div></div>
+  <div class="space-row welcome-row"><div class="space-copy" data-reveal="text"><p class="eyebrow">CARINHO QUE SE PERCEBE</p><h2>Bem recebida.<br /><em>Do começo ao fim.</em></h2><p>Uma pausa, um café e pequenos gestos que fazem você se sentir especial. O acolhimento está também nos detalhes de cada visita.</p><p>Mais do que reservar um horário, é ter espaço para ser ouvida, conversar sobre suas expectativas e tirar dúvidas com tranquilidade. Queremos que você se sinta bem desde a chegada.</p><a class="text-link" href={whatsapp()} target="_blank" rel="noopener noreferrer">Reserve seu momento <span aria-hidden="true">↗</span></a></div><div class="space-photo welcome-photo" data-reveal="photo"><img src="/images/acolhimento.jpeg" alt="Bandeja de boas-vindas com café, água e um pequeno mimo na recepção da Essencial Clinic" width="1080" height="1440" loading="lazy" /></div></div>
  </div></section>
- <section id="avaliacoes" class="reviews-section" aria-labelledby="reviews-title"><div class="container"><div class="reviews-layout"><div><p class="eyebrow">QUEM VEIO, CONTA</p><h2 id="reviews-title">Cuidado que se sente.<br /><em>Histórias que ficam.</em></h2><p>Depoimentos de clientes publicados no Google.</p></div><a class="review-summary" href="https://share.google/QrDsgFQpvrFFuEfec" target="_blank" rel="noopener noreferrer" aria-label="Nota 5 de 5, com 33 avaliações no Google. Abrir avaliações."><span class="review-score">5,0 <span class="review-stars" aria-hidden="true">★★★★★</span></span><span class="review-count">33 avaliações no Google <span aria-hidden="true">↗</span></span></a></div>
- <div class="testimonials-grid">{testimonials.map(review => <article class="testimonial"><div class="testimonial-heading"><span class="review-avatar" aria-hidden="true">{review.initials}</span><div><h3>{review.name}</h3><p>Avaliação no Google</p></div></div><div class="review-stars" role="img" aria-label="5 de 5 estrelas">★★★★★</div><blockquote>{review.text}</blockquote></article>)}</div>
- <div class="reviews-bottom"><p>Seleção de avaliações · Nota e total informados em 08/10/2026.</p><a class="text-link" href="https://share.google/QrDsgFQpvrFFuEfec" target="_blank" rel="noopener noreferrer">Ver todas no Google <span aria-hidden="true">↗</span></a></div></div></section>
- <section id="contato" class="contact-section"><div class="container contact-grid"><div><p class="eyebrow">UM TEMPO DEDICADO A VOCÊ</p><h2>Seu próximo cuidado<br /><em>começa aqui.</em></h2><p>Será um prazer receber você em Icaraí.</p><a class="button button-light" href={whatsapp()} target="_blank" rel="noopener noreferrer">Agendar pelo WhatsApp <span aria-hidden="true">↗</span></a></div><div class="contact-details"><div><span class="eyebrow">ONDE ESTAMOS</span><address>Avenida Sete de Setembro, 317 · Sala 602<br />Icaraí, Niterói · RJ</address><a class="text-link" href={maps} target="_blank" rel="noopener noreferrer">Como chegar <span aria-hidden="true">↗</span></a></div><div><span class="eyebrow">ATENDIMENTO</span><p>Segunda a sexta-feira<br />Com hora marcada</p></div><div><span class="eyebrow">FALE COMIGO</span><a class="phone" href="tel:+5521977579292">(21) 97757-9292</a></div></div></div></section>
- <section id="localizacao" class="map-section" aria-label="Localização do consultório"><div class="container"><div class="map-heading"><div><p class="eyebrow">ENCONTRE O CONSULTÓRIO</p><h2>Esperamos você <em>em Icaraí.</em></h2><p>Avenida Sete de Setembro, 317 · Sala 602 · Icaraí, Niterói · RJ</p></div><a class="text-link" href={maps} target="_blank" rel="noopener noreferrer">Abrir no Google Maps ↗</a></div><iframe class="location-map" src={mapEmbed} title="Google Maps: Avenida Sete de Setembro, 317, Icaraí, Niterói" width="1200" height="390" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div></section>
+ <section id="avaliacoes" class="reviews-section" aria-labelledby="reviews-title"><div class="container"><div class="reviews-layout" data-reveal="text"><div><p class="eyebrow">QUEM VEIO, CONTA</p><h2 id="reviews-title">Cuidado que se sente.<br /><em>Histórias que ficam.</em></h2><p>Depoimentos de clientes publicados no Google.</p></div><a class="review-summary" href="https://share.google/QrDsgFQpvrFFuEfec" target="_blank" rel="noopener noreferrer" aria-label="Nota 5 de 5, com 33 avaliações no Google. Abrir avaliações."><span class="review-score">5,0 <span class="review-stars" aria-hidden="true">★★★★★</span></span><span class="review-count">33 avaliações no Google <span aria-hidden="true">↗</span></span></a></div>
+ <div class="testimonials-grid">{testimonials.map(review => <article class="testimonial" data-reveal="card"><div class="testimonial-heading"><span class="review-avatar" aria-hidden="true">{review.initials}</span><div><h3>{review.name}</h3><p>Avaliação no Google</p></div></div><div class="review-stars" role="img" aria-label="5 de 5 estrelas">★★★★★</div><blockquote>{review.text}</blockquote></article>)}</div>
+ <div class="reviews-bottom" data-reveal="text"><p>Seleção de avaliações · Nota e total informados em 08/10/2026.</p><a class="text-link" href="https://share.google/QrDsgFQpvrFFuEfec" target="_blank" rel="noopener noreferrer">Ver todas no Google <span aria-hidden="true">↗</span></a></div></div></section>
+ <section id="contato" class="contact-section"><div class="container contact-grid" data-reveal="text"><div><p class="eyebrow">UM TEMPO DEDICADO A VOCÊ</p><h2>Seu próximo cuidado<br /><em>começa aqui.</em></h2><p>Será um prazer receber você em Icaraí.</p><a class="button button-light" href={whatsapp()} target="_blank" rel="noopener noreferrer">Agendar pelo WhatsApp <span aria-hidden="true">↗</span></a></div><div class="contact-details"><div><span class="eyebrow">ONDE ESTAMOS</span><address>Avenida Sete de Setembro, 317 · Sala 602<br />Icaraí, Niterói · RJ</address><a class="text-link" href={maps} target="_blank" rel="noopener noreferrer">Como chegar <span aria-hidden="true">↗</span></a></div><div><span class="eyebrow">ATENDIMENTO</span><p>Segunda a sexta-feira<br />Com hora marcada</p></div><div><span class="eyebrow">FALE COMIGO</span><a class="phone" href="tel:+5521977579292">(21) 97757-9292</a></div></div></div></section>
+ <section id="localizacao" class="map-section" aria-label="Localização do consultório"><div class="container"><div class="map-heading" data-reveal="text"><div><p class="eyebrow">ENCONTRE O CONSULTÓRIO</p><h2>Esperamos você <em>em Icaraí.</em></h2><p>Avenida Sete de Setembro, 317 · Sala 602 · Icaraí, Niterói · RJ</p></div><a class="text-link" href={maps} target="_blank" rel="noopener noreferrer">Abrir no Google Maps ↗</a></div><iframe class="location-map" src={mapEmbed} title="Google Maps: Avenida Sete de Setembro, 317, Icaraí, Niterói" width="1200" height="390" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div></section>
 </main>
 <footer class="container footer"><a href="#inicio" class="brand"><span class="monogram">JM</span><span><span class="brand-name">Jeanne Menezes</span><span class="brand-sub">DRA. · FARMACÊUTICA ESTETA</span></span></a><p>© {new Date().getFullYear()} Dra. Jeanne Menezes</p><a href="https://www.instagram.com/drajeannemenezes/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></footer>
 <a class="floating-contact" href={whatsapp()} target="_blank" rel="noopener noreferrer" aria-label="Conversar com a Dra. Jeanne pelo WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a9 9 0 0 1-13.6 7.8L3 21l1.5-4.5A9 9 0 1 1 21 11.5Z"/><path d="M8 7c0 5 4 9 9 9l1-3-3-1-1 1c-1.5-.5-2.5-1.5-3-3l1-1-1-3Z"/></svg></a>
@@ -139,6 +145,15 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  let focused = false;
  let timer;
  let slideRequest = 0;
+ let galleryInView = !('IntersectionObserver' in window);
+ const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+ function preloadNextPhoto() {
+  const nextPhoto = galleryImages[(current + 1) % galleryImages.length];
+  if (!nextPhoto) return;
+  nextPhoto.loading = 'eager';
+  if (typeof nextPhoto.decode === 'function') nextPhoto.decode().catch(() => {});
+ }
  async function renderSlide(next) {
   const target = (next + slides.length) % slides.length;
   const request = ++slideRequest;
@@ -153,10 +168,13 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
   });
   dots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === current)));
   carousel.querySelector('.gallery-current-caption').textContent = slides[current].querySelector('figcaption').textContent;
+  if (galleryInView) preloadNextPhoto();
  }
  function schedule() {
   clearInterval(timer);
-  if (!paused && !hovering && !focused && !document.hidden) timer = setInterval(() => renderSlide(current + 1), 5000);
+  if (galleryInView && !paused && !hovering && !focused && !document.hidden) {
+   timer = setInterval(() => renderSlide(current + 1), 5000);
+  }
  }
  function updateToggle() {
   toggle.textContent = paused ? 'Reproduzir' : 'Pausar';
@@ -168,9 +186,12 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  carousel.querySelector('.carousel-next').addEventListener('click', () => navigate(current + 1));
  dots.forEach((dot, index) => dot.addEventListener('click', () => navigate(index)));
  toggle.addEventListener('click', () => { paused = !paused; updateToggle(); schedule(); });
- carousel.addEventListener('mouseenter', () => { hovering = true; schedule(); });
+ // No celular, toques nao devem deixar o autoplay permanentemente em pausa.
+ carousel.addEventListener('mouseenter', () => { if (finePointer.matches) { hovering = true; schedule(); } });
  carousel.addEventListener('mouseleave', () => { hovering = false; schedule(); });
- carousel.addEventListener('focusin', () => { focused = true; schedule(); });
+ carousel.addEventListener('focusin', event => {
+  if (event.target.matches(':focus-visible')) { focused = true; schedule(); }
+ });
  carousel.addEventListener('focusout', event => { if (!carousel.contains(event.relatedTarget)) { focused = false; schedule(); } });
  viewport.addEventListener('keydown', event => {
   if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); navigate(current + (event.key === 'ArrowRight' ? 1 : -1)); }
@@ -181,6 +202,28 @@ const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURICompo
  viewport.addEventListener('touchend', event => { const dx = event.changedTouches[0].clientX - touchX; const dy = event.changedTouches[0].clientY - touchY; if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) navigate(current + (dx < 0 ? 1 : -1)); }, { passive: true });
  document.addEventListener('visibilitychange', schedule);
  reducedMotion.addEventListener('change', event => { if(event.matches) { paused = true; updateToggle(); schedule(); } });
+ // Cada bloco entra apenas uma vez. Sem listener de scroll ou animacao da foto
+ // no celular: evita reprocessamento da imagem durante a rolagem.
+ const revealItems = document.querySelectorAll('[data-reveal]');
+ if (document.documentElement.classList.contains('motion-ready')) {
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+   entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('is-revealed');
+    observer.unobserve(entry.target);
+   });
+  }, { threshold: 0.04, rootMargin: '0px 0px -6% 0px' });
+  revealItems.forEach(item => revealObserver.observe(item));
+ }
+
+ if ('IntersectionObserver' in window) {
+  const galleryObserver = new IntersectionObserver(entries => {
+   galleryInView = entries[0].isIntersecting;
+   if (galleryInView) preloadNextPhoto();
+   schedule();
+  }, { threshold: 0.12 });
+  galleryObserver.observe(carousel);
+ }
  updateToggle(); schedule();
 
 </script>

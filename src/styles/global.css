@@ -178,15 +178,9 @@ main>section,#consultorio .space-row{scroll-margin-top:105px}
 
  .gallery-panel .carousel-stage{height:480px}
 
- .gallery-panel .carousel-slide{display:none;opacity:1;transform:none;z-index:auto}
-
- .gallery-panel .carousel-slide.is-active{display:flex;opacity:1;z-index:auto}
-
- .gallery-panel .carousel-slide.is-leaving:not(.is-active){display:none}
-
  .gallery-panel .carousel-slide img{border-radius:0}
 
- .gallery-panel .carousel-viewport,.gallery-panel .carousel-track{isolation:auto;transform:none;border-radius:0}
+ .gallery-panel .carousel-viewport,.gallery-panel .carousel-track{transform:none;border-radius:0}
 
  .header{backdrop-filter:none;-webkit-backdrop-filter:none}
 
@@ -196,15 +190,9 @@ main>section,#consultorio .space-row{scroll-margin-top:105px}
 
 
 
-/* No visual animation or animated scrolling on this page. */
-
-*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+/* Mantem o scroll livre, sem snap artificial. */
 
 html,body{scroll-snap-type:none !important}
-
-.gallery-panel .carousel-slide{display:none;opacity:1;transform:none}
-
-.gallery-panel .carousel-slide.is-active{display:flex}
 
 
 
@@ -246,4 +234,131 @@ a:visited {
 .text-link:focus-visible {
   border-bottom: 0 !important;
   text-decoration: none !important;
+}
+
+
+/* ---------------------------------------------------------
+   Movimento leve, unico e sem oscilacoes durante a rolagem.
+   Fotos grandes nao sao animadas nos celulares.
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+ html { scroll-behavior: smooth; }
+
+ html.motion-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 560ms cubic-bezier(.22, .61, .36, 1),
+              transform 560ms cubic-bezier(.22, .61, .36, 1);
+ }
+ html.motion-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+ }
+ /* No desktop, fotografias entram discretamente, sem zoom nem deslocamento. */
+ html.motion-ready [data-reveal="photo"] {
+  transform: none;
+  transition: opacity 650ms ease;
+ }
+}
+
+/* Celular: apenas textos e cartoes se movimentam. As fotos ficam fixas. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 767px),
+       (prefers-reduced-motion: no-preference) and (hover: none) and (pointer: coarse) {
+ html.motion-ready [data-reveal] {
+  transform: translateY(8px);
+  transition-duration: 440ms;
+ }
+ html.motion-ready [data-reveal].is-revealed { transform: none; }
+ html.motion-ready [data-reveal="photo"] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+ }
+}
+
+/* O carrossel permanece com dimensoes estaveis, inclusive no iPhone.
+   Alternar classes altera apenas opacidade, nunca display ou geometria. */
+.gallery-panel .carousel-stage { height: var(--gallery-height); }
+.gallery-panel .carousel-viewport {
+ width: 100%;
+ height: 100%;
+ aspect-ratio: auto;
+ overflow: hidden;
+}
+.gallery-panel .carousel-track {
+ position: relative;
+ width: 100%;
+ height: 100%;
+}
+.gallery-panel .carousel-slide {
+ display: flex;
+ position: absolute;
+ inset: 0;
+ width: 100%;
+ height: 100%;
+ opacity: 0;
+ visibility: hidden;
+ z-index: 0;
+ pointer-events: none;
+ transform: none;
+ transition: opacity 480ms ease, visibility 0s linear 480ms;
+}
+.gallery-panel .carousel-slide.is-active {
+ display: flex;
+ opacity: 1;
+ visibility: visible;
+ z-index: 2;
+ pointer-events: auto;
+ transition: opacity 480ms ease, visibility 0s;
+}
+.gallery-panel .carousel-slide img {
+ display: block;
+ width: auto;
+ height: auto;
+ max-width: 100%;
+ max-height: 100%;
+ object-fit: contain;
+ transform: none;
+}
+
+/* Interfaces sem hover: transicao um pouco mais curta, para poupar processamento. */
+@media (max-width: 767px), (hover: none) and (pointer: coarse) {
+ .gallery-panel .carousel-slide,
+ .gallery-panel .carousel-slide.is-active {
+  transition-duration: 360ms, 0s;
+ }
+}
+
+/* Nunca impor movimento para quem o desabilitou no sistema. */
+@media (prefers-reduced-motion: reduce) {
+ html { scroll-behavior: auto; }
+ .gallery-panel .carousel-slide,
+ .gallery-panel .carousel-slide.is-active {
+  transition: none;
+ }
+ [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+ .button, .procedure, .text-link, .desktop-nav a {
+  transition: background-color 180ms ease, color 180ms ease;
+ }
+}
+
+/* Legendas centralizadas abaixo das fotografias */
+.gallery-current-caption {
+  width: 100%;
+  text-align: center;
+  font-family: Editorial, Georgia, serif;
+  font-size: 23px;
+  line-height: 1.3;
+  margin: 12px auto 8px;
+  min-height: 2.6em;
+}
+
+@media (max-width: 767px) {
+  .gallery-current-caption {
+    font-size: 20px;
+    margin-top: 10px;
+  }
 }
